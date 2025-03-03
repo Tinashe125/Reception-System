@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reception System Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            background-color: #007BFF;
+            color: white;
+            width: 250px;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar h2 {
+            color: white;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .sidebar img {
+            width: 80%;
+            margin-bottom: 20px;
+        }
+        .sidebar button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        .sidebar button:hover {
+            background-color: #0056b3;
+        }
+        .main {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f4f4f4;
+            position: relative;
+        }
+        .top-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #343a40;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .top-navbar input[type="text"] {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            width: 200px; /* Adjusted width */
+        }
+        .logout-btn {
+            background-color: #dc3545; /* Bootstrap danger color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .tab {
+            margin: 20px 0;
+        }
+        form {
+            display: none;
+            margin-top: 20px;
+        }
+        form.active {
+            display: block;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <img src="ME-removebg-preview.png" alt="Logo"> <!-- Replace with your logo URL -->
+    <h2>Admin Dashboard</h2>
+    <button onclick="showTab('equipment')">Equipment Management</button>
+    <button onclick="showTab('vehicle')">Vehicle Management</button>
+    <button onclick="showTab('visitor')">Visitor Management</button>
+</div>
+
+<div class="main">
+    <div class="top-navbar">
+        <input type="text" placeholder="Search..." id="search">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="tab">
+        <!-- Equipment Management Form -->
+        <form id="equipmentForm" class="form active">
+            <h2>Equipment Management</h2>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="approvedBy">Approved By:</label>
+            <input type="text" id="approvedBy" name="approvedBy" required>
+
+            <label for="itemDescription">Item Description:</label>
+            <input type="text" id="itemDescription" name="itemDescription" required>
+
+            <label for="departmentTo">Department To:</label>
+            <input type="text" id="departmentTo" name="departmentTo" required>
+
+            <label for="departmentFrom">Department From:</label>
+            <input type="text" id="departmentFrom" name="departmentFrom" required>
+
+            <label for="serialNumber">Serial Number:</label>
+            <input type="text" id="serialNumber" name="serialNumber" required>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+
+        <!-- Vehicle Management Form -->
+        <form id="vehicleForm" class="form">
+            <h2>Vehicle Management</h2>
+            <label for="vehicleID">Vehicle ID:</label>
+            <input type="text" id="vehicleID" name="vehicleID" required>
+
+            <label for="owner">Owner Name:</label>
+            <input type="text" id="owner" name="owner" required>
+
+            <label for="vehicleType">Vehicle Type:</label>
+            <select id="vehicleType" name="vehicleType" required>
+                <option value="car">Car</option>
+                <option value="motorcycle">Motorcycle</option>
+                <option value="truck">Truck</option>
+                <option value="bus">Bus</option>
+            </select>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+
+        <!-- Visitor Management Form -->
+        <form id="visitorForm" class="form">
+            <h2>Visitor Management</h2>
+            <label for="visitorName">Visitor Name:</label>
+            <input type="text" id="visitorName" name="visitorName" required>
+
+            <label for="visitPurpose">Purpose of Visit:</label>
+            <textarea id="visitPurpose" name="visitPurpose" required></textarea>
+
+            <label for="visitorDate">Visit Date:</label>
+            <input type="date" id="visitorDate" name="visitorDate" required>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showTab(tabName) {
+        const forms = document.querySelectorAll('.form');
+        forms.forEach(form => {
+            form.classList.remove('active');
+        });
+        document.getElementById(tabName + 'Form').classList.add('active');
+    }
+
+    function logout() {
+        alert('You have logged out!');
+        // Redirect or perform logout action here
+    }
+</script>
+
+</body>
+</html>
